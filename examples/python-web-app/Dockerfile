@@ -3,21 +3,17 @@ FROM ubuntu
 WORKDIR /app
 
 COPY requirements.txt /app
-COPY devops /app/devops
+COPY devops /app
 
-    
+ENV PIP_BREAK_SYSTEM_PACKAGES 1
+
 RUN apt-get update && \
-    apt-get install -y python3 python3-pip python3-venv python3-full pipx && \
-    python3 -m pip install --upgrade pip
-ENV PATH='/root/.local/bin:$PATH"
+    apt-get install -y python3 python3-pip && \
+    pip install -r requirements.txt && \
+    cd devops
 
-RUN python3 -m venv /app/venv && \
-    /app/venv/bin/pip install --upgrade pip && \
-    /app/venv/bin/pip install -r requirements.txt
-
-ENV PATH="/app/venv/bin:$PATH"
 ENTRYPOINT ["python3"]
-CMD ["devops/manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["manage.py", "runserver", "0.0.0.0:8000"]
 
 
 
